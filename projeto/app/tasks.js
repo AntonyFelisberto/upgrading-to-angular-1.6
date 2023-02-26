@@ -1,4 +1,17 @@
 angular.module('app').controller('TasksCtrl', function($scope, $interval) {
+  
+  var self = this;
+  var interval;
+
+  self.$onInit = function(){
+    updateClock();
+    interval = $interval(updateClock, 1000 * 60);
+  }
+
+
+  self.$onDestroy = function(){
+    $interval.cancel(interval);
+  }
 
   $scope.deleteTodo = function(todo) {
     $scope.tasks.splice($scope.tasks.indexOf(todo), 1);
@@ -9,13 +22,6 @@ angular.module('app').controller('TasksCtrl', function($scope, $interval) {
       hour: 'numeric', minute: '2-digit'
     });
   }
-
-  updateClock();
-  var interval = $interval(updateClock, 1000 * 60);
-
-  $scope.$on('$destroy', function() {
-    $interval.cancel(interval);
-  });
 });
 
 angular.module("app").directives('tasks',function(){
