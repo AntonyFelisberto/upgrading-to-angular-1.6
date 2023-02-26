@@ -1,19 +1,17 @@
-angular.module('app').controller('TasksCtrl', function($scope, $interval) {
-  
+angular.module('app').controller('TasksCtrl', function($interval) {
   var self = this;
-  var interval;
 
-  self.$onInit = function(){
+  self.$onInit = function() {
     updateClock();
-    interval = $interval(updateClock, 1000 * 60);
-  }
+    var interval = $interval(updateClock, 1000 * 60);
+  };
 
-  self.$onDestroy = function(){
+  self.deleteTodo = function(todo) {
+    self.tasks.splice(self.tasks.indexOf(todo), 1);
+  };
+
+  self.$onDestroy = function() {
     $interval.cancel(interval);
-  }
-
-  $scope.deleteTodo = function(todo) {
-    $scope.tasks.splice($scope.tasks.indexOf(todo), 1);
   };
 
   self.moveUp = function(todo) {
@@ -34,15 +32,20 @@ angular.module('app').controller('TasksCtrl', function($scope, $interval) {
     self.tasks.splice(index + 1, 0, todo);
   };
 
+  self.onDarkModeToggle = function(mode) {
+    self.mode = mode;
+    self.tasksTheme = mode === 'dark' ? 'dark-theme' : '';
+  };
+
   function updateClock() {
-    $scope.formattedTime = new Date().toLocaleTimeString(undefined, {
+    self.formattedTime = new Date().toLocaleTimeString(undefined, {
       hour: 'numeric', minute: '2-digit'
     });
   }
-}).component('tasks',{
-    templateUrl:'app/tasks.html',
-    controller:'tasksCtrl',
-    scope:{
-      tasks:'<'
-    }
-})
+}).component('tasks', {
+  templateUrl: 'app/tasks.html',
+  controller: 'TasksCtrl',
+  bindings: {
+    tasks: '<'
+  }
+});

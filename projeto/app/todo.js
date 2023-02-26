@@ -1,26 +1,33 @@
 angular.module('app').controller('TodoCtrl', function($timeout) {
-  var wayToGoPromise = undefined;
   var self = this;
-  var previousName;
+  var wayToGoPromise = undefined;
+  var prevTodoDone = undefined;
 
-  self.$onInit = function(){
-    $scope.$watch(()=> {return self.todo.done;}, displayWayToGoMessage);
-  }
+  self.$onInit = function() {
+    console.log('todo initialized');
+  };
 
-  self.$onChange = function(changes){
-    if(changes.todo){
+  self.$doCheck = function() {
+    if (self.todo.done !== prevTodoDone) {
+      if (self.todo.done) {
+        displayWayToGoMessage();
+      }
+
+      prevTodoDone = self.todo.done;
+    }
+  };
+
+  self.$onChanges = function(changes) {
+    if (changes.todo) {
       var name = self.todo.name;
       self.formattedTodoName = name.charAt(0).toUpperCase()
         + name.substring(1).toLowerCase();
     }
-  }
+  };
 
-  self.$doCheck = function(){
-    if(previousName !== self.todo.name){
-      previousName = self.todo.name
-      displayWayToGoMessage();
-    }
-  }
+  self.$postLink = function() {
+    console.log('This runs after linking is done');
+  };
 
   function displayWayToGoMessage() {
     if (self.todo.done) {
@@ -38,12 +45,12 @@ angular.module('app').controller('TodoCtrl', function($timeout) {
 });
 
 angular.module('app').component('todo', {
-    templateUrl: 'app/todo.html',
-    bindings:{
-      todo:'<'
-    },
-    require:{
-      tasksCtrl:'^^tasks'
-    },
-    controller: 'TodoCtrl',
-  });
+  templateUrl: 'app/todo.html',
+  bindings: {
+    todo: '<'
+  },
+  require: {
+    tasksCtrl: '^^tasks'
+  },
+  controller: 'TodoCtrl'
+});
