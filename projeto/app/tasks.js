@@ -8,7 +8,6 @@ angular.module('app').controller('TasksCtrl', function($scope, $interval) {
     interval = $interval(updateClock, 1000 * 60);
   }
 
-
   self.$onDestroy = function(){
     $interval.cancel(interval);
   }
@@ -17,20 +16,33 @@ angular.module('app').controller('TasksCtrl', function($scope, $interval) {
     $scope.tasks.splice($scope.tasks.indexOf(todo), 1);
   };
 
+  self.moveUp = function(todo) {
+    var index = self.tasks.indexOf(todo);
+    if (index === 0) {
+      return;
+    }
+    self.tasks.splice(index, 1);
+    self.tasks.splice(index - 1, 0, todo);
+  };
+
+  self.moveDown = function(todo) {
+    var index = self.tasks.indexOf(todo);
+    if (index === self.tasks.length - 1) {
+      return;
+    }
+    self.tasks.splice(index, 1);
+    self.tasks.splice(index + 1, 0, todo);
+  };
+
   function updateClock() {
     $scope.formattedTime = new Date().toLocaleTimeString(undefined, {
       hour: 'numeric', minute: '2-digit'
     });
   }
-});
-
-angular.module("app").directives('tasks',function(){
-  return{
-    restrict:'E',
+}).component('tasks',{
     templateUrl:'app/tasks.html',
     controller:'tasksCtrl',
     scope:{
       tasks:'<'
     }
-  }
 })

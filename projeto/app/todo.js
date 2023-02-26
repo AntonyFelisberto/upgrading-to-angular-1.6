@@ -24,7 +24,7 @@ angular.module('app').controller('TodoCtrl', function($timeout) {
 
   function displayWayToGoMessage() {
     if (self.todo.done) {
-      $scope.showWayToGo = true;
+      self.showWayToGo = true;
 
       if (wayToGoPromise) {
         $timeout.cancel(wayToGoPromise);
@@ -40,8 +40,10 @@ angular.module('app').controller('TodoCtrl', function($timeout) {
 angular.module('app').component('todo', {
     templateUrl: 'app/todo.html',
     bindings:{
-      todo:'<',
-      deleteTodo:'&'
+      todo:'<'
+    },
+    require:{
+      tasksCtrl:'^^tasks'
     },
     controller: 'TodoCtrl',
   });
