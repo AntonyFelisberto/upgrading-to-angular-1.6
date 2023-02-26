@@ -1,6 +1,7 @@
-angular.module('app').controller('TodoCtrl', function($scope, $timeout) {
+angular.module('app').controller('TodoCtrl', function($timeout) {
   var wayToGoPromise = undefined;
   var self = this;
+  var previousName;
 
   self.$onInit = function(){
     $scope.$watch(()=> {return self.todo.done;}, displayWayToGoMessage);
@@ -11,6 +12,13 @@ angular.module('app').controller('TodoCtrl', function($scope, $timeout) {
       var name = self.todo.name;
       self.formattedTodoName = name.charAt(0).toUpperCase()
         + name.substring(1).toLowerCase();
+    }
+  }
+
+  self.$doCheck = function(){
+    if(previousName !== self.todo.name){
+      previousName = self.todo.name
+      displayWayToGoMessage();
     }
   }
 
