@@ -1,5 +1,4 @@
-angular.module('app').controller('TasksCtrl', function($scope, $interval, resolvedTasks) {
-  $scope.tasks = resolvedTasks;
+angular.module('app').controller('TasksCtrl', function($scope, $interval) {
 
   $scope.deleteTodo = function(todo) {
     $scope.tasks.splice($scope.tasks.indexOf(todo), 1);
@@ -18,3 +17,14 @@ angular.module('app').controller('TasksCtrl', function($scope, $interval, resolv
     $interval.cancel(interval);
   });
 });
+
+angular.module("app").directives('tasks',function(){
+  return{
+    restrict:'E',
+    templateUrl:'app/tasks.html',
+    controller:'tasksCtrl',
+    scope:{
+      tasks:'<'
+    }
+  }
+})
